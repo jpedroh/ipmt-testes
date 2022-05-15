@@ -1,6 +1,8 @@
+from math import log2
 import sys
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 
@@ -23,13 +25,16 @@ def apply_dataframe_transformations(df):
 
 
 def file_sizes_graph(dataframe):
-  dataframe[['original_size', 'ipmt_size', 'zip_size']].plot(
-      x='original_size',
+  dataframe[['ipmt_size', 'zip_size']].plot(
       xlabel="Tamanho Original do Arquivo (MB)",
       ylabel="Tamanho Final do Arquivo (MB)",
       title="Benchmark de Tamanho do Arquivo"
   )
-  plt.legend(["ipmt", "zip"])
+  
+  x = np.linspace(1, max(dataframe['original_size']), len(dataframe['original_size']))
+  plt.plot(x, x, 'b')
+
+  plt.legend(["ipmt", "zip", 'original'])
   plt.savefig('./out/grafico_file_sizes.png')
 
 
@@ -40,7 +45,11 @@ def execution_time_graph(dataframe):
       ylabel="Tempo de Execução (s)",
       title="Benchmark de Tempo de Execução"
   )
-  plt.legend(["ipmt", "zip"])
+  x = np.linspace(1, max(dataframe['original_size']), len(dataframe['original_size']))
+  n2 = (x**2)*0.15
+  plt.plot(x, n2, 'r')
+
+  plt.legend(["ipmt", "zip", '$O(n^2)$'])
   plt.savefig('./out/grafico_execution_time.png')
 
 

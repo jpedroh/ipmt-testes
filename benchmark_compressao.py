@@ -14,7 +14,9 @@ def main():
     file = f"{sys.argv[1]}/{file_name}"
     if file.endswith("MB"):
       print(f"Running test for {file}")
-      results.append(do_benchmark_for_file(file))
+      result = do_benchmark_for_file(file)
+      results.append(result)
+      print(result)
 
   keys = ['original_size', 'ipmt_size', 'zip_size', 'ipmt_ms', 'zip_ms']
 
