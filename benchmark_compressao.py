@@ -12,7 +12,7 @@ def main():
   files.sort()
   for file_name in files:
     file = f"{sys.argv[1]}/{file_name}"
-    if file.endswith("MB"):
+    if file.endswith("MB") or file.endswith("txt"):
       print(f"Running test for {file}")
       result = do_benchmark_for_file(file)
       results.append(result)
