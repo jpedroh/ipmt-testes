@@ -16,6 +16,7 @@ def main():
 
 
 def apply_dataframe_transformations(df):
+    df['alphabet_size'] = range(1, 129)
     df['original_size'] = df['original_size'].transform(
         lambda x: x / 1024 / 1024)
     df['ipmt_size'] = df['ipmt_size'].transform(lambda x: x / 1024 / 1024)
@@ -26,33 +27,25 @@ def apply_dataframe_transformations(df):
 
 def file_sizes_graph(dataframe):
     dataframe[['ipmt_size', 'zip_size']].plot(
-        xlabel="Tamanho Original do Arquivo (MB)",
+        xlabel="Tamanho do Alfabeto",
         ylabel="Tamanho Final do Arquivo (MB)",
-        title="Benchmark de Tamanho do Arquivo"
+        title="Execuções com Alfabetos de Tamanho Variável"
     )
 
-    x = np.linspace(1, max(dataframe['original_size']), len(
-        dataframe['original_size']))
-    plt.plot(x, x, 'b')
-
-    plt.legend(["ipmt", "zip", 'original'])
-    plt.savefig('./graphs/grafico_file_sizes.png')
+    plt.legend(["ipmt", "zip"])
+    plt.savefig('./graphs/grafico_file_sizes_var_alph.png')
 
 
 def execution_time_graph(dataframe):
-    dataframe[['original_size', 'ipmt_ms', 'zip_ms']].plot(
-        x='original_size',
+    dataframe[['alphabet_size', 'ipmt_ms', 'zip_ms']].plot(
+        x='alphabet_size',
         xlabel="Tamanho Original do Arquivo (MB)",
         ylabel="Tempo de Execução (s)",
-        title="Benchmark de Tempo de Execução"
+        title="Execuções com Alfabetos de Tamanho Variável"
     )
-    x = np.linspace(1, max(dataframe['original_size']), len(
-        dataframe['original_size']))
-    n2 = 0.04*x*np.log(x)
-    plt.plot(x, n2, 'r')
 
-    plt.legend(["ipmt", "zip", '$O(n*log(n))$'])
-    plt.savefig('./graphs/grafico_execution_time.png')
+    plt.legend(["ipmt", "zip"])
+    plt.savefig('./graphs/grafico_execution_time_var_alph.png')
 
 
 if __name__ == '__main__':

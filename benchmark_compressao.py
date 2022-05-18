@@ -12,7 +12,7 @@ def main():
   files.sort()
   for file_name in files:
     file = f"{sys.argv[1]}/{file_name}"
-    if file.endswith("MB"):
+    if file.endswith("MB") or file.endswith("txt"):
       print(f"Running test for {file}")
       result = do_benchmark_for_file(file)
       results.append(result)
@@ -20,7 +20,7 @@ def main():
 
   keys = ['original_size', 'ipmt_size', 'zip_size', 'ipmt_ms', 'zip_ms']
 
-  with open('out/benchmark.csv', 'w', newline='') as out_file:
+  with open('out/benchmark_compressao.csv', 'w', newline='') as out_file:
       dict_writer = csv.DictWriter(out_file, keys)
       dict_writer.writeheader()
       dict_writer.writerows(results)
@@ -29,13 +29,13 @@ def main():
 def do_benchmark_for_file(input_file_name):
   # Fazemos a compressao com o ipmt
   ipmt_command = f"/usr/bin/time -f \"%E\" ./bin/ipmt zip {input_file_name}"
-  subprocess.run(ipmt_command, capture_output=True, text=True, shell=True)
-  ipmt_ms = int(resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime * 1000)
+  ipmt_result = subprocess.run(ipmt_command, capture_output=True, text=True, shell=True)
+  ipmt_ms = time_to_ms(ipmt_result.stderr.replace('\n', ''))
 
   # Fazemos a compressao com zip (benchmark)
   zip_command = f"/usr/bin/time -f \"%E\" zip {input_file_name}.zip {input_file_name}"
-  subprocess.run(zip_command, capture_output=True, text=True, shell=True)
-  zip_ms = int(resource.getrusage(resource.RUSAGE_CHILDREN).ru_utime * 1000)
+  zip_result = subprocess.run(zip_command, capture_output=True, text=True, shell=True)
+  zip_ms = time_to_ms(zip_result.stderr.replace('\n', ''))
 
   # Verificamos e salvamos os tamanhos de cada arquivo
   original_size = os.path.getsize(input_file_name)
@@ -50,6 +50,14 @@ def do_benchmark_for_file(input_file_name):
       'zip_ms': zip_ms
   }
 
+
+def time_to_ms(time):
+  split = time.split(':')
+  minutes = int(split[0])
+  seconds = int(split[1].split('.')[0])
+  ms = int(split[1].split('.')[1])
+
+  return (minutes * 60 * 1000) + (seconds * 1000) + ms * 10
 
 if __name__ == '__main__':
     main()
