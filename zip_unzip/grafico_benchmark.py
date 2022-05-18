@@ -7,12 +7,13 @@ import pandas as pd
 
 def main():
     file_name = sys.argv[1]
+    category = sys.argv[2]
     dataframe = pd.read_csv(file_name)
 
     apply_dataframe_transformations(dataframe)
 
-    file_sizes_graph(dataframe)
-    execution_time_graph(dataframe)
+    file_sizes_graph(dataframe, category)
+    execution_time_graph(dataframe, category)
 
 
 def apply_dataframe_transformations(df):
@@ -24,11 +25,11 @@ def apply_dataframe_transformations(df):
     df['zip_ms'] = df['zip_ms'].transform(lambda x: x / 1000)
 
 
-def file_sizes_graph(dataframe):
+def file_sizes_graph(dataframe, category):
     dataframe[['ipmt_size', 'zip_size']].plot(
         xlabel="Tamanho Original do Arquivo (MB)",
         ylabel="Tamanho Final do Arquivo (MB)",
-        title="Benchmark de Tamanho do Arquivo"
+        title=f"Benchmark de Tamanho do Arquivo ({category})"
     )
 
     x = np.linspace(1, max(dataframe['original_size']), len(
@@ -36,23 +37,19 @@ def file_sizes_graph(dataframe):
     plt.plot(x, x, 'b')
 
     plt.legend(["ipmt", "zip", 'original'])
-    plt.savefig('./graphs/grafico_file_sizes.png')
+    plt.savefig(f'./graphs/grafico_file_sizes_{category}.png')
 
 
-def execution_time_graph(dataframe):
+def execution_time_graph(dataframe, category):
     dataframe[['original_size', 'ipmt_ms', 'zip_ms']].plot(
         x='original_size',
         xlabel="Tamanho Original do Arquivo (MB)",
         ylabel="Tempo de Execução (s)",
-        title="Benchmark de Tempo de Execução"
+        title=f"Benchmark de Tempo de Execução ({category})"
     )
-    x = np.linspace(1, max(dataframe['original_size']), len(
-        dataframe['original_size']))
-    n2 = 0.04*x*np.log(x)
-    plt.plot(x, n2, 'r')
 
-    plt.legend(["ipmt", "zip", '$O(n*log(n))$'])
-    plt.savefig('./graphs/grafico_execution_time.png')
+    plt.legend(["ipmt", "zip"])
+    plt.savefig(f'./graphs/grafico_execution_time_{category}.png')
 
 
 if __name__ == '__main__':
