@@ -68,7 +68,7 @@ def main():
         pat_file = "./dataset/patterns_dna_completo.txt"
         pre_process_patterns(pat_file)
         suffix_text_file = "./dataset/textos/"
-        for f in ["dan.50MB", "dna.100MB", "dna.200MB"]:
+        for f in ["dna.50MB", "dna.100MB", "dna.200MB"]:
             write_csv(suffix_text_file+f)
 
 if __name__ == '__main__':

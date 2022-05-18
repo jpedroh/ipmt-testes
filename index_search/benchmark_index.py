@@ -6,7 +6,7 @@ def index_file(file_name):
     return (p.stderr.replace('\n', ''))
 
 def main():
-    names = ["english.50MB", "english.100MB", "english.200MB", "english.1024MB", "dan.50MB", "dna.100MB", "dna.200MB"]
+    names = ["english.50MB", "english.100MB", "english.200MB", "english.1024MB", "dna.50MB", "dna.100MB", "dna.200MB"]
     values = []
     suffix_text_file = "./dataset/textos/"
     for f in names:
